@@ -1,0 +1,13 @@
+[Unit]
+Description=Blueman PiOS Assistant BT keyboard debouncer
+After=bluetooth.target
+Wants=bluetooth.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 -m blueman_pios_assistant.keystroke_filter
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=default.target

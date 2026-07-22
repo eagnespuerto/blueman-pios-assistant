@@ -1,0 +1,2 @@
+# Let the "input" group open /dev/uinput so the debouncer doesn't need root.
+KERNEL=="uinput", MODE="0660", GROUP="input", OPTIONS+="static_node=uinput"
