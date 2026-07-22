@@ -20,6 +20,7 @@ DEFAULTS = {
     "keystroke": {
         "enabled": "true",
         "min_repeat_interval_ms": "40",
+        "max_repeat_hold_ms": "800",
         "device_name_filter": "",
     },
 }
@@ -30,6 +31,7 @@ class Config:
     tx_power_dbm: int
     keystroke_enabled: bool
     min_repeat_interval_ms: int
+    max_repeat_hold_ms: int
     device_name_filter: tuple[str, ...]
 
     @classmethod
@@ -46,6 +48,7 @@ class Config:
             tx_power_dbm=parser.getint("signal", "tx_power_dbm"),
             keystroke_enabled=parser.getboolean("keystroke", "enabled"),
             min_repeat_interval_ms=parser.getint("keystroke", "min_repeat_interval_ms"),
+            max_repeat_hold_ms=parser.getint("keystroke", "max_repeat_hold_ms"),
             device_name_filter=filters,
         )
 
@@ -55,6 +58,7 @@ class Config:
         parser["keystroke"] = {
             "enabled": "true" if self.keystroke_enabled else "false",
             "min_repeat_interval_ms": str(self.min_repeat_interval_ms),
+            "max_repeat_hold_ms": str(self.max_repeat_hold_ms),
             "device_name_filter": ",".join(self.device_name_filter),
         }
         path.parent.mkdir(parents=True, exist_ok=True)

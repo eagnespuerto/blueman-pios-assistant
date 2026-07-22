@@ -59,6 +59,11 @@ enabled = true
 # Minimum ms between same-key presses. 40 ms ≈ 25 chars/sec,
 # faster than any human sustains. Raise for stubborn keyboards.
 min_repeat_interval_ms = 40
+# Maximum ms the kernel is allowed to autorepeat a single key before we
+# assume the release packet was lost and force a synthetic release.
+# 800 ms is well past any deliberate hold in normal typing; raise it if
+# you actually want to hold keys (gaming, arrow-key scrolling).
+max_repeat_hold_ms = 800
 # Comma-separated substrings matched against the evdev device name.
 # Leave blank to filter every keyboard reported over BT.
 device_name_filter =
@@ -68,7 +73,13 @@ The applet preferences dialog writes the same file, so hand-editing and the GUI 
 
 ## How the debouncer works
 
-`keystroke_filter.py` opens the BT keyboard as an `evdev.InputDevice`, grabs it exclusively, and re-emits events through a `uinput` virtual keyboard. For each `EV_KEY` event it tracks the last press timestamp per keycode; if a new press for the same key arrives within `min_repeat_interval_ms`, it's dropped. Autorepeat events (`value == 2`) are passed through untouched — those are already rate-limited by the kernel.
+`keystroke_filter.py` opens the BT keyboard as an `evdev.InputDevice`, grabs it exclusively, and re-emits events through a `uinput` virtual keyboard. It applies three filters:
+
+- **Bounce filter**: same-key press events (`value == 1`) arriving within `min_repeat_interval_ms` of the previous forwarded press are dropped. Kills "thiiiiiis" from a flaky BT link that duplicates single taps.
+- **Stuck-key cutoff**: kernel autorepeat (`value == 2`) is capped at `max_repeat_hold_ms` per press. Past that, the daemon synthesizes a release and drops further repeats until it sees the real release. This is the fix for sticky keys — the classic case where the BT release packet is lost and the kernel autorepeats forever until you tap a different key.
+- **Missed-release recovery**: if a fresh press arrives for a key the daemon still tracks as held, it emits a synthetic release before letting the new press through, so the key can never end up permanently latched.
+
+SYN frames from the kernel are forwarded verbatim; the daemon only calls `syn()` after events it synthesizes itself. Earlier versions double-syn'd every event, which showed up as a slight typing lag.
 
 ## How the signal tamer works
 
