@@ -12,13 +12,13 @@ import logging
 import subprocess
 from gettext import gettext as _
 
-try:
-    from blueman.plugins.AppletPlugin import AppletPlugin
-except ImportError:  # pragma: no cover - only importable inside blueman
-    AppletPlugin = object  # type: ignore
-
-from .config import Config
-from .signal_control import apply_tx_power
+# Blueman loads this file as blueman.plugins.applet.PiOSAssistant, so any
+# relative import here would resolve inside blueman's package and fail
+# silently — the plugin then never shows up in the plugins panel. Import
+# our own package by its absolute name instead.
+from blueman.plugins.AppletPlugin import AppletPlugin
+from blueman_pios_assistant.config import Config
+from blueman_pios_assistant.signal_control import apply_tx_power
 
 log = logging.getLogger("blueman-pios-assistant.plugin")
 
@@ -29,7 +29,7 @@ class PiOSAssistant(AppletPlugin):  # type: ignore[misc]
         "PiOS Bluetooth assistant: reduces adapter TX power and debounces BT "
         "keyboard repeats so you stop typing 'thiiiiiis'."
     )
-    __icon__ = "bluetooth-symbolic"
+    __icon__ = "bluetooth"
 
     def on_load(self) -> None:
         self._cfg = Config.load()

@@ -30,6 +30,20 @@ sudo ./install.sh
 
 Log out and back in, then right-click the Blueman tray icon → **Plugins** → enable **PiOSAssistant**.
 
+### Plugin doesn't appear in the panel?
+
+Blueman scans its applet plugin directory once at applet startup, and it silently skips plugins that raise on import. Two things to check:
+
+1. Restart the applet after install so it re-scans:
+   ```sh
+   pkill -f blueman-applet; nohup blueman-applet >/dev/null 2>&1 &
+   ```
+2. Look for import errors:
+   ```sh
+   blueman-applet --loglevel debug 2>&1 | grep -i pios
+   ```
+   Typical culprits are a missing `python3-evdev` or a Blueman version older than 2.3 (which uses a different plugin base class).
+
 ## Configuration
 
 Preferences live in `~/.config/blueman-pios-assistant/config.ini`:
