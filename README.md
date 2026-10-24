@@ -1,5 +1,12 @@
 # blueman-pios-assistant
 
+[![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![release](https://img.shields.io/github/v/release/eagnespuerto/blueman-pios-assistant?include_prereleases&sort=semver)](https://github.com/eagnespuerto/blueman-pios-assistant/releases/latest)
+[![made with](https://img.shields.io/badge/made%20with-Python-3776AB?logo=python&logoColor=white)](https://github.com/eagnespuerto/blueman-pios-assistant)
+[![platform](https://img.shields.io/badge/platform-Raspberry%20Pi-A22846?logo=raspberrypi&logoColor=white)](https://github.com/eagnespuerto/blueman-pios-assistant#readme)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-support%20me-FF5E5B?logo=kofi&logoColor=white)](https://ko-fi.com/eagnespuerto)
+[![Linktree](https://img.shields.io/badge/Linktree-soitsagnes-43E55E?logo=linktree&logoColor=white)](https://linktr.ee/soitsagnes)
+
 A [Blueman](https://github.com/blueman-project/blueman) applet plugin for Raspberry Pi OS that fixes two everyday Bluetooth annoyances:
 
 1. **Signal strength tamer** — reduces the adapter's TX power so a nearby device isn't blasting the airwaves (useful when you keep dropping other 2.4 GHz traffic, or a keyboard sits 20 cm from the Pi).
